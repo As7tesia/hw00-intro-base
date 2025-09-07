@@ -1,4 +1,5 @@
 import {vec3} from 'gl-matrix';
+import {vec4} from 'gl-matrix';
 const Stats = require('stats-js');
 import * as DAT from 'dat.gui';
 import Icosphere from './geometry/Icosphere';
@@ -14,15 +15,17 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
+  frequency: 1.0,
 };
 
 let icosphere: Icosphere;
 let square: Square;
 let cube: Cube;
 let prevTesselations: number = 5;
+let time: number = 0.0;
 
 function loadScene() {
-  icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, controls.tesselations);
+  icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 0.2, controls.tesselations);
   icosphere.create();
   square = new Square(vec3.fromValues(0, 0, 0));
   square.create();
@@ -39,10 +42,19 @@ function main() {
   stats.domElement.style.top = '0px';
   document.body.appendChild(stats.domElement);
 
+  var palette = {
+    color1: [200, 90, 255, 1],
+    color2: [255, 142, 209, 1]
+  };
+
+
   // Add controls to the gui
   const gui = new DAT.GUI();
   gui.add(controls, 'tesselations', 0, 8).step(1);
   gui.add(controls, 'Load Scene');
+  gui.addColor(palette, 'color1');
+  gui.addColor(palette, 'color2');
+  gui.add(controls, 'frequency', 0.1, 5.0).step(0.1);
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -63,13 +75,14 @@ function main() {
   renderer.setClearColor(0.2, 0.2, 0.2, 1);
   gl.enable(gl.DEPTH_TEST);
 
-  const lambert = new ShaderProgram([
-    new Shader(gl.VERTEX_SHADER, require('./shaders/lambert-vert.glsl')),
-    new Shader(gl.FRAGMENT_SHADER, require('./shaders/lambert-frag.glsl')),
+  const custom = new ShaderProgram([
+    new Shader(gl.VERTEX_SHADER, require('./shaders/custom-vert.glsl')),
+    new Shader(gl.FRAGMENT_SHADER, require('./shaders/custom-frag.glsl')),
   ]);
 
   // This function will be called every frame
   function tick() {
+    time += 1.0;
     camera.update();
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
@@ -77,14 +90,18 @@ function main() {
     if(controls.tesselations != prevTesselations)
     {
       prevTesselations = controls.tesselations;
-      icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, prevTesselations);
+      icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 0.2, prevTesselations);
       icosphere.create();
     }
-    renderer.render(camera, lambert, [
-      cube,
-      // icosphere,
+
+    renderer.render(camera, custom, [
+      cube, 
+      icosphere,
       // square,
-    ]);
+    ], vec4.fromValues(palette.color1[0] / 255, palette.color1[1] / 255, palette.color1[2] / 255, 1), 
+    vec4.fromValues(palette.color2[0] / 255, palette.color2[1] / 255, palette.color2[2] / 255, 1),
+    controls.frequency,
+    time);
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame

@@ -28,7 +28,10 @@ class ShaderProgram {
   unifModel: WebGLUniformLocation;
   unifModelInvTr: WebGLUniformLocation;
   unifViewProj: WebGLUniformLocation;
-  unifColor: WebGLUniformLocation;
+  unifColor1: WebGLUniformLocation;
+  unifColor2: WebGLUniformLocation;
+  unifFreq: WebGLUniformLocation;
+  unifTime: WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -47,7 +50,10 @@ class ShaderProgram {
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
     this.unifViewProj   = gl.getUniformLocation(this.prog, "u_ViewProj");
-    this.unifColor      = gl.getUniformLocation(this.prog, "u_Color");
+    this.unifColor1      = gl.getUniformLocation(this.prog, "u_Color1");
+    this.unifColor2      = gl.getUniformLocation(this.prog, "u_Color2");
+    this.unifFreq        = gl.getUniformLocation(this.prog, "u_Freq");
+    this.unifTime       = gl.getUniformLocation(this.prog, "u_Time");
   }
 
   use() {
@@ -78,10 +84,31 @@ class ShaderProgram {
     }
   }
 
-  setGeometryColor(color: vec4) {
+  setGeometryColor1(color: vec4) {
     this.use();
-    if (this.unifColor !== -1) {
-      gl.uniform4fv(this.unifColor, color);
+    if (this.unifColor1 !== -1) {
+      gl.uniform4fv(this.unifColor1, color);
+    }
+  }
+
+  setGeometryColor2(color: vec4) {
+    this.use();
+    if (this.unifColor2 !== -1) {
+      gl.uniform4fv(this.unifColor2, color);
+    }
+  }
+
+  setFreq(freq: number) {
+    this.use();
+    if (this.unifFreq !== -1) {
+      gl.uniform1f(this.unifFreq, freq);
+    }
+  }
+
+  setTime(time: number) {
+    this.use();
+    if (this.unifTime !== -1) {
+      gl.uniform1f(this.unifTime, time);
     }
   }
 
