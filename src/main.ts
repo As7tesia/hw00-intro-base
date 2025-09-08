@@ -94,6 +94,7 @@ function main() {
       icosphere.create();
     }
 
+    
     renderer.render(camera, custom, [
       cube, 
       icosphere,
