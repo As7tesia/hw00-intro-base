@@ -21,7 +21,7 @@ const controls = {
 let icosphere: Icosphere;
 let square: Square;
 let cube: Cube;
-let prevTesselations: number = 5;
+let prevTesselations: number = 7;
 let time: number = 0.0;
 
 function loadScene() {
