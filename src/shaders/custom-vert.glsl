@@ -147,7 +147,8 @@ void main()
     vec4 modelposition = u_Model * vs_Pos;   // Temporarily store the transformed vertex positions for use below
     float realTime = u_Time * 0.01;
     fs_vPos = modelposition;
-    modelposition += vs_Nor * noise3D(vs_Nor.xyz) * sin(realTime * 2.5); // * noise3D(vs_Nor.xyz * 10.0 + vec3(realTime) * 0.225);
+    // modelposition += vs_Nor * noise3D(vs_Nor.xyz * ) * (sin(realTime * 2.5); // * noise3D(vs_Nor.xyz * 10.0 + vec3(realTime) * 0.225);
+    modelposition += vs_Nor * noise3D(vs_Nor.xyz * 10.0 + vec3(realTime) * 0.225);
     // modelposition.z += noise3D(vs_Nor.xyz * vec3(realTime));  
     modelposition.y += sin(realTime); //+ noise1D(realTime * 10.0) * 0.1
     modelposition.x += cos(realTime);

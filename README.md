@@ -1,4 +1,13 @@
 # TODO: SOLID DESCRIPTION OF "MY" PROJECT
+![Shader on Icosphere (Cooler)](sc1.png)
+![Shader on Cube](sc2.png)
+
+The shader looks a lot better on icosphere because I didn't look at the Cube when making it :(
+Which is why I added a button to change between cube and icosphere, please switch to icosphere to see shader....
+I used perlin noise to change the fragment shader color, and then shift the coordinate with respect to time.
+I also made 2 controllers for color.
+For the vertex shader I used perlin to displace the vertices along their normal, and made it really high frequency so it looks like a spikey ball. Then I animated the coordinates with time.
+I also animated the overall location in a circle with sin and cosine functions.
 
 # HW 0: Intro to Javascript and WebGL
 

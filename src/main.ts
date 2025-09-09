@@ -16,6 +16,7 @@ const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
   frequency: 1.0,
+  shape: 1
 };
 
 let icosphere: Icosphere;
@@ -23,6 +24,7 @@ let square: Square;
 let cube: Cube;
 let prevTesselations: number = 7;
 let time: number = 0.0;
+let prevShape: number = 0;
 
 function loadScene() {
   icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 0.2, controls.tesselations);
@@ -43,8 +45,8 @@ function main() {
   document.body.appendChild(stats.domElement);
 
   var palette = {
-    color1: [200, 90, 255, 1],
-    color2: [255, 142, 209, 1]
+    color1: [99, 32, 255, 1],
+    color2: [255, 47, 169, 1]
   };
 
 
@@ -55,6 +57,7 @@ function main() {
   gui.addColor(palette, 'color1');
   gui.addColor(palette, 'color2');
   gui.add(controls, 'frequency', 0.1, 5.0).step(0.1);
+  gui.add(controls, 'shape', 0, 1).step(1);
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -94,15 +97,32 @@ function main() {
       icosphere.create();
     }
 
-    
-    renderer.render(camera, custom, [
-      cube, 
+
+
+    if(controls.shape != prevShape) {
+      prevShape = controls.shape;
+    }
+
+    if (prevShape === 1) {
+        renderer.render(camera, custom, [
+      // cube, 
       icosphere,
       // square,
     ], vec4.fromValues(palette.color1[0] / 255, palette.color1[1] / 255, palette.color1[2] / 255, 1), 
     vec4.fromValues(palette.color2[0] / 255, palette.color2[1] / 255, palette.color2[2] / 255, 1),
     controls.frequency,
     time);
+      }
+      if (prevShape === 0) {
+                renderer.render(camera, custom, [
+      cube, 
+      // icosphere,
+      // square,
+    ], vec4.fromValues(palette.color1[0] / 255, palette.color1[1] / 255, palette.color1[2] / 255, 1), 
+    vec4.fromValues(palette.color2[0] / 255, palette.color2[1] / 255, palette.color2[2] / 255, 1),
+    controls.frequency,
+    time);
+      }
     stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame

@@ -117,13 +117,16 @@ void main()
     // Material base color (before shading)
         // vec4 diffuseColor = smoothstep(vec4(0.0, 1.0, 0.3843, 1.0), u_Color, fbm3D(fs_vPos, 5, 0.2, 1, 0, 0.1, 1));
         vec3 coord = fs_vPos.xyz;
-        coord.y -= u_Time * 0.01;
+        coord.y -= u_Time * 0.005;
         float factor = noise3D(coord * u_Freq);
         factor = clamp(factor, 0.01, 0.99);
         vec4 diffuseColor = mix(u_Color1, u_Color2, factor);
         // vec4 diffuseColor = u_Color;
 
         // Calculate the diffuse term for Lambert shading
+        vec4 newLightVec = fs_LightVec;
+        newLightVec.x *= cos(u_Time * 0.005);
+        newLightVec.y *= sin(u_Time * 0.005);
         float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));
         diffuseTerm = clamp(diffuseTerm, 0.001, 0.999);
         // Avoid negative lighting values
