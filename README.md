@@ -1,3 +1,5 @@
+# TODO: SOLID DESCRIPTION OF "MY" PROJECT
+
 # HW 0: Intro to Javascript and WebGL
 
 <p align="center">
